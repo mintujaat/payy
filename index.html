@@ -1,69 +1,45 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#5f259f">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="PayFlow">
-<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon.svg">
-<link rel="stylesheet" href="style.css"><title>PayFlow</title>
-</head>
+<!doctype html><html><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5f259f"><meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css"><title>PayFlow</title></head>
 <body>
-<header class="topbar">
-  <div class="profile"><div class="avatar">M</div><div><b>Mintu</b><small>mintu@payflow</small></div></div>
-  <button class="round" onclick="openScanner()">▣</button>
-</header>
+<header><div class="user"><div class="avatar">M</div><div><b>Mintu</b><small>mintu@payflow</small></div></div><button onclick="scan()" class="circle">⌁</button></header>
 
-<main id="homePage">
-<section class="hero">
-  <div class="heroTop"><span>Wallet Balance</span><button onclick="showBalance()">👁</button></div>
-  <div id="balanceMasked" class="big">₹ •••••</div>
-  <div id="balanceVisible" class="big hidden">₹1,000</div>
-  <small>Demo wallet · PIN protected</small>
+<div id="app">
+<section class="balance"><div class="line"><span>Wallet balance</span><button onclick="balance()">Check balance</button></div><div id="bal">₹ •••••</div><small>Protected demo wallet</small></section>
+
+<section class="actions">
+<button onclick="pay()"><strong>↗</strong><b>Send Money</b></button>
+<button onclick="scan()"><strong>▦</strong><b>Scan & Pay</b></button>
+<button onclick="add()"><strong>＋</strong><b>Add Money</b></button>
+<button onclick="myqr()"><strong>⌁</strong><b>Receive</b></button>
 </section>
 
-<section class="quick">
-<button onclick="openPayment()"><i>↗</i><b>Send</b><small>Money</small></button>
-<button onclick="openScanner()"><i>▦</i><b>Scan</b><small>QR</small></button>
-<button onclick="openAdd()"><i>＋</i><b>Add</b><small>Money</small></button>
-<button onclick="showMyQR()"><i>⌁</i><b>My QR</b><small>Receive</small></button>
-</section>
+<section class="card"><div class="title"><h3>Money Transfer</h3><span>All</span></div>
+<div class="chips"><button onclick="pay()">To UPI ID</button><button onclick="pay()">To Mobile</button><button onclick="myqr()">My QR</button><button onclick="show('Contacts are stored locally in this demo')">Contacts</button></div></section>
 
-<section class="card">
-<div class="rowtitle"><h3>Recharge & Payments</h3><span>See all</span></div>
+<section class="card"><div class="title"><h3>Recharge & Bills</h3><span>View all</span></div>
 <div class="services">
-<button onclick="toast('Mobile Recharge is demo only')">📱<span>Mobile</span></button>
-<button onclick="toast('DTH is demo only')">📺<span>DTH</span></button>
-<button onclick="toast('Electricity is demo only')">💡<span>Electricity</span></button>
-<button onclick="toast('Bills are demo only')">🧾<span>Bills</span></button>
+<button onclick="show('Mobile recharge demo')">📱<small>Mobile Recharge</small></button>
+<button onclick="show('DTH recharge demo')">📺<small>DTH</small></button>
+<button onclick="show('Electricity bill demo')">💡<small>Electricity</small></button>
+<button onclick="show('Water bill demo')">💧<small>Water</small></button>
+<button onclick="show('Gas bill demo')">🔥<small>Gas</small></button>
+<button onclick="show('FASTag demo')">🚗<small>FASTag</small></button>
+<button onclick="show('Insurance demo')">🛡️<small>Insurance</small></button>
+<button onclick="show('More services')">•••<small>More</small></button>
+</div></section>
+
+<section class="card"><div class="title"><h3>Recent transactions</h3><button onclick="historyPage()">View history</button></div><div id="recent"></div></section>
+
+<section class="card"><div class="title"><h3>Offers & Rewards</h3></div><div class="offer"><b>PayFlow Rewards</b><span>Demo cashback and reward section</span></div></section>
+<p class="disclaimer">Educational demo only. No real UPI, bank or card transaction is performed.</p>
 </div>
-</section>
 
-<section class="card">
-<div class="rowtitle"><h3>Recent Activity</h3><button onclick="showHistory()">View all</button></div>
-<div id="homeTx"></div>
-</section>
+<div id="history" class="hidden page"><div class="pageHead"><h2>History</h2><button onclick="clearHistory()">Clear</button></div><div class="card" id="allTx"></div></div>
 
-<div class="notice">Educational demo — no real UPI or bank transaction.</div>
-</main>
-
-<main id="historyPage" class="hidden page">
-<div class="pagehead"><h2>History</h2><button onclick="clearHistory()">Clear</button></div>
-<div class="card" id="historyList"></div>
-</main>
-
-<nav class="nav">
-<button id="homeNav" class="active" onclick="showHome()">⌂<span>Home</span></button>
-<button onclick="openPayment()">↗<span>Pay</span></button>
-<button onclick="openScanner()">▦<span>Scan</span></button>
-<button id="historyNav" onclick="showHistory()">◷<span>History</span></button>
-</nav>
-
-<div id="modal" class="modal"><div class="sheet"><button class="x" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
-<div id="toast" class="toast"></div>
-<script src="https://unpkg.com/html5-qrcode"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="app.js"></script>
+<nav><button id="n1" class="active" onclick="home()">⌂<span>Home</span></button><button onclick="pay()">↗<span>Pay</span></button><button onclick="scan()">▦<span>Scan</span></button><button id="n4" onclick="historyPage()">◷<span>History</span></button><button onclick="show('Profile & Settings — demo')">☻<span>Profile</span></button></nav>
+<div id="modal" class="modal"><div class="sheet"><button class="close" onclick="closeM()">×</button><div id="content"></div></div></div>
+<div id="toast"></div>
+<script src="https://unpkg.com/html5-qrcode"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script><script src="app.js"></script>
 </body></html>
