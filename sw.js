@@ -1,1 +1,1 @@
-const C="pf-full";const A=["./","./index.html","./style.css","./app.js","./manifest.json","./icon.svg"];self.addEventListener("install",e=>e.waitUntil(caches.open(C).then(c=>c.addAll(A))));self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))))
+const C="pf-shot";const A=["./","./index.html","./style.css","./app.js","./manifest.json","./icon.svg"];self.addEventListener("install",e=>e.waitUntil(caches.open(C).then(c=>c.addAll(A))));self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))))

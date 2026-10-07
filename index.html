@@ -1,45 +1,85 @@
-<!doctype html><html><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#5f259f"><meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css"><title>PayFlow</title></head>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4433a8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="PayFlow">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+<title>PayFlow</title>
+</head>
 <body>
-<header><div class="user"><div class="avatar">M</div><div><b>Mintu</b><small>mintu@payflow</small></div></div><button onclick="scan()" class="circle">⌁</button></header>
 
-<div id="app">
-<section class="balance"><div class="line"><span>Wallet balance</span><button onclick="balance()">Check balance</button></div><div id="bal">₹ •••••</div><small>Protected demo wallet</small></section>
+<header class="header">
+  <button class="profile">M</button>
+  <div class="headActions">
+    <button>▦</button>
+    <button>?</button>
+  </div>
+</header>
 
-<section class="actions">
-<button onclick="pay()"><strong>↗</strong><b>Send Money</b></button>
-<button onclick="scan()"><strong>▦</strong><b>Scan & Pay</b></button>
-<button onclick="add()"><strong>＋</strong><b>Add Money</b></button>
-<button onclick="myqr()"><strong>⌁</strong><b>Receive</b></button>
+<main>
+<section class="hero">
+  <div class="heroText">
+    <div class="mini">PayFlow</div>
+    <h1>Pay smarter.<br>Live better.</h1>
+    <p>Fast, simple & secure demo payments.</p>
+    <button class="heroBtn" onclick="openPay()">Send Money <b>›</b></button>
+  </div>
+  <div class="heroOrb orb1"></div>
+  <div class="heroOrb orb2"></div>
+  <div class="heroCard">₹</div>
 </section>
 
-<section class="card"><div class="title"><h3>Money Transfer</h3><span>All</span></div>
-<div class="chips"><button onclick="pay()">To UPI ID</button><button onclick="pay()">To Mobile</button><button onclick="myqr()">My QR</button><button onclick="show('Contacts are stored locally in this demo')">Contacts</button></div></section>
-
-<section class="card"><div class="title"><h3>Recharge & Bills</h3><span>View all</span></div>
-<div class="services">
-<button onclick="show('Mobile recharge demo')">📱<small>Mobile Recharge</small></button>
-<button onclick="show('DTH recharge demo')">📺<small>DTH</small></button>
-<button onclick="show('Electricity bill demo')">💡<small>Electricity</small></button>
-<button onclick="show('Water bill demo')">💧<small>Water</small></button>
-<button onclick="show('Gas bill demo')">🔥<small>Gas</small></button>
-<button onclick="show('FASTag demo')">🚗<small>FASTag</small></button>
-<button onclick="show('Insurance demo')">🛡️<small>Insurance</small></button>
-<button onclick="show('More services')">•••<small>More</small></button>
-</div></section>
-
-<section class="card"><div class="title"><h3>Recent transactions</h3><button onclick="historyPage()">View history</button></div><div id="recent"></div></section>
-
-<section class="card"><div class="title"><h3>Offers & Rewards</h3></div><div class="offer"><b>PayFlow Rewards</b><span>Demo cashback and reward section</span></div></section>
-<p class="disclaimer">Educational demo only. No real UPI, bank or card transaction is performed.</p>
+<section class="section">
+<div class="sectionTitle"><h2>Money Transfers</h2><button class="refer">🪙 Refer → ₹1200</button></div>
+<div class="transferGrid">
+  <button onclick="openPay()"><i>☎</i><b>To Mobile<br>Number</b></button>
+  <button onclick="openPay()"><i>▥</i><b>To Bank &<br>Self A/c</b></button>
+  <button onclick="openWallet()"><i>₹</i><em>Cashback</em><b>PayFlow<br>Wallet</b></button>
+  <button onclick="checkBalance()"><i>₹</i><b>Check<br>Balance</b></button>
 </div>
+</section>
 
-<div id="history" class="hidden page"><div class="pageHead"><h2>History</h2><button onclick="clearHistory()">Clear</button></div><div class="card" id="allTx"></div></div>
+<div class="promoWrap"><div class="promo">◉　Start saving in pure Silver</div><div class="promo blue">👨🏻　Get up to ₹10L loan</div></div>
 
-<nav><button id="n1" class="active" onclick="home()">⌂<span>Home</span></button><button onclick="pay()">↗<span>Pay</span></button><button onclick="scan()">▦<span>Scan</span></button><button id="n4" onclick="historyPage()">◷<span>History</span></button><button onclick="show('Profile & Settings — demo')">☻<span>Profile</span></button></nav>
+<section class="section">
+<div class="sectionTitle"><h2>Recharge & Bills</h2></div>
+<div class="billGrid">
+<button onclick="demo('Mobile Recharge')">📱<b>Mobile<br>Recharge</b></button>
+<button onclick="demo('Rent via Credit Card')">🏠<b>Rent via<br>Credit Card</b></button>
+<button onclick="demo('Electricity Bill')">💡<b>Electricity<br>Bill</b></button>
+<button onclick="demo('Loan Repayment')">💰<b>Loan<br>Repayment</b></button>
+</div>
+<div class="wideBills"><button onclick="demo('LPG Cylinder')">Book an LPG cylinder <span>🛢️</span></button><button onclick="more()">More <b>›</b></button></div>
+</section>
+
+<section class="section">
+<h2>Loans</h2>
+<div class="loanCard"><div><b>Need a little extra?</b><p>Explore demo loan services and offers.</p></div><button onclick="demo('Loans')">Explore ›</button></div>
+</section>
+
+<section class="section">
+<div class="sectionTitle"><h2>Rewards</h2><button class="link" onclick="demo('Rewards')">View all</button></div>
+<div class="reward"><div>🎁</div><div><b>PayFlow Rewards</b><p>Complete demo payments and earn reward points.</p></div></div>
+</section>
+</main>
+
+<nav>
+<button class="active" onclick="home()"><strong>⌂</strong><span>Home</span></button>
+<button onclick="demo('Search')"><strong>⌕</strong><span>Search</span></button>
+<button class="scan" onclick="scan()"><strong>⌗</strong></button>
+<button onclick="demo('Alerts')"><strong>♧</strong><span>Alerts</span></button>
+<button onclick="historyPage()"><strong>◷</strong><span>History</span></button>
+</nav>
+
 <div id="modal" class="modal"><div class="sheet"><button class="close" onclick="closeM()">×</button><div id="content"></div></div></div>
 <div id="toast"></div>
-<script src="https://unpkg.com/html5-qrcode"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script><script src="app.js"></script>
-</body></html>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
