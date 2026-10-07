@@ -1,28 +1,25 @@
-const KEY="payflow_demo_v1";
-let data=JSON.parse(localStorage.getItem(KEY)||'null')||{balance:1000,upi:"mintu@payflow",transactions:[]};
-function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
-function money(n){return Number(n).toLocaleString("en-IN",{maximumFractionDigits:2})}
-function render(){
- document.getElementById("balance").textContent=money(data.balance);
- document.getElementById("upiId").textContent=data.upi;
- const box=document.getElementById("transactions");
- if(!data.transactions.length){box.innerHTML='<div class="empty">No transactions yet</div>';return}
- box.innerHTML=data.transactions.slice().reverse().slice(0,10).map(t=>`
- <div class="tx"><div class="txicon">${t.type==="credit"?"↓":"↑"}</div>
- <div class="txmain"><b>${escapeHtml(t.title)}</b><small>${new Date(t.time).toLocaleString()}</small></div>
- <strong class="${t.type}">${t.type==="credit"?"+":"−"}₹${money(t.amount)}</strong></div>`).join("");
-}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function openModal(html){document.getElementById("modalBody").innerHTML=html;document.getElementById("modal").classList.add("show")}
-function closeModal(){document.getElementById("modal").classList.remove("show")}
-function openAdd(){openModal(`<h2>Add Demo Money</h2><div class="form"><input id="addAmt" type="number" min="1" placeholder="Amount ₹"><button class="primary" onclick="addMoney()">Add to wallet</button></div>`)}
-function addMoney(){let a=Number(document.getElementById("addAmt").value);if(!a||a<=0)return alert("Enter a valid amount");data.balance+=a;data.transactions.push({type:"credit",title:"Demo top-up",amount:a,time:Date.now()});save();closeModal()}
-function openSend(){openModal(`<h2>Send Money</h2><div class="form"><input id="to" placeholder="Receiver UPI ID"><input id="sendAmt" type="number" min="1" placeholder="Amount ₹"><input id="note" placeholder="Note (optional)"><button class="primary" onclick="sendMoney()">Pay now</button></div>`)}
-function sendMoney(){let to=document.getElementById("to").value.trim(),a=Number(document.getElementById("sendAmt").value),note=document.getElementById("note").value.trim();if(!to||!a||a<=0)return alert("Enter receiver and amount");if(a>data.balance)return alert("Insufficient demo balance");data.balance-=a;data.transactions.push({type:"debit",title:`Paid to ${to}`,amount:a,time:Date.now()});save();closeModal();setTimeout(()=>openModal(`<div style="text-align:center"><div style="font-size:55px">✓</div><h2>Payment Successful</h2><p>₹${money(a)} sent to <b>${escapeHtml(to)}</b></p><button class="primary" onclick="closeModal()">Done</button></div>`),100)}
-function showQR(){openModal(`<div class="qrwrap"><h2>My PayFlow QR</h2><div id="qrcode"></div><b>${escapeHtml(data.upi)}</b><p class="muted">Demo QR — no real UPI payment</p></div>`);setTimeout(()=>new QRCode(document.getElementById("qrcode"),{text:data.upi,width:190,height:190}),50)}
-function clearTx(){if(confirm("Clear transaction history?")){data.transactions=[];save()}}
-function resetDemo(){if(confirm("Reset wallet to ₹1,000 and clear all transactions?")){data={balance:1000,upi:"mintu@payflow",transactions:[]};save()}}
-document.getElementById("themeBtn").onclick=()=>{document.body.classList.toggle("dark");localStorage.setItem("pf_dark",document.body.classList.contains("dark"))}
-if(localStorage.getItem("pf_dark")==="true")document.body.classList.add("dark");
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+const KEY="payflow_demo_v2";let d=JSON.parse(localStorage.getItem(KEY)||"null")||{balance:1000,upi:"mintu@payflow",history:[]};
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(d));render()};
+const fmt=n=>Number(n).toLocaleString("en-IN",{maximumFractionDigits:2});
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+function render(){document.getElementById("balanceVisible").textContent="₹"+fmt(d.balance);let html=d.history.length?d.history.slice().reverse().slice(0,5).map(tx).join(""):'<div class="empty">No transactions yet</div>';document.getElementById("homeTx").innerHTML=html;document.getElementById("historyList").innerHTML=d.history.length?d.history.slice().reverse().map(tx).join(""):'<div class="empty">No transactions yet</div>'}
+function tx(t){return `<div class="tx"><div class="txico">${t.type==="credit"?"↓":"↑"}</div><div class="txmain"><b>${esc(t.title)}</b><small>${new Date(t.time).toLocaleString()}</small></div><strong class="${t.type}">${t.type==="credit"?"+":"−"}₹${fmt(t.amount)}</strong></div>`}
+function openModal(h){document.getElementById("modalContent").innerHTML=h;document.getElementById("modal").classList.add("show")}
+function closeModal(){document.getElementById("modal").classList.remove("show");if(window.scanner){window.scanner.clear().catch(()=>{});window.scanner=null}}
+function toast(s){let t=document.getElementById("toast");t.textContent=s;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+function pin(title,callback){openModal(`<h2>${title}</h2><p style="color:#888;font-size:13px">Demo PIN: any value is accepted.</p><div class="pinbox"><input id="pin" inputmode="numeric" maxlength="6" autofocus></div><button class="primary" style="width:100%" onclick="checkPin()">Continue</button>`);window.pinCallback=callback;setTimeout(()=>document.getElementById("pin").focus(),100)}
+function checkPin(){let v=document.getElementById("pin").value;if(!v.length)return toast("Enter any PIN");let cb=window.pinCallback;closeModal();cb()}
+function showBalance(){pin("Enter PIN to view balance",()=>{document.getElementById("balanceMasked").classList.add("hidden");document.getElementById("balanceVisible").classList.remove("hidden");setTimeout(()=>{document.getElementById("balanceVisible").classList.add("hidden");document.getElementById("balanceMasked").classList.remove("hidden")},10000)})}
+function openAdd(){openModal(`<h2>Add Demo Money</h2><div class="form"><input id="addAmt" type="number" min="1" placeholder="Amount ₹"><button class="primary" onclick="addMoney()">Add Money</button></div>`)}
+function addMoney(){let a=+document.getElementById("addAmt").value;if(a<=0)return toast("Enter amount");d.balance+=a;d.history.push({type:"credit",title:"Demo wallet top-up",amount:a,time:Date.now()});save();closeModal();toast("Money added")}
+function openPayment(receiver=""){openModal(`<h2>Pay</h2><div class="form"><input id="receiver" value="${esc(receiver)}" placeholder="UPI ID / receiver"><input id="amount" type="number" min="1" placeholder="Amount ₹"><input id="note" placeholder="Note (optional)"><button class="primary" onclick="confirmPayment()">Continue</button></div>`)}
+function confirmPayment(){let to=document.getElementById("receiver").value.trim(),a=+document.getElementById("amount").value;if(!to||a<=0)return toast("Enter receiver and amount");if(a>d.balance)return toast("Insufficient demo balance");pin("Confirm Payment",()=>finishPayment(to,a))}
+function finishPayment(to,a){d.balance-=a;d.history.push({type:"debit",title:"Paid to "+to,amount:a,time:Date.now()});save();closeModal();playSuccess();setTimeout(()=>openModal(`<div class="success"><div class="successIcon">✓</div><h2>Payment Successful</h2><p>₹${fmt(a)} paid to <b>${esc(to)}</b></p><small style="color:#999">Demo transaction · ${new Date().toLocaleTimeString()}</small><br><br><button class="primary" style="width:100%" onclick="closeModal()">Done</button></div>`),120)}
+function playSuccess(){try{let C=window.AudioContext||window.webkitAudioContext,c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=880;o.type="sine";g.gain.setValueAtTime(.0001,c.currentTime);g.gain.exponentialRampToValueAtTime(.18,c.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+.32);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.33)}catch(e){}}
+function openScanner(){openModal(`<h2>Scan QR</h2><p style="font-size:12px;color:#888">Allow camera access. Scan a PayFlow demo QR.</p><div id="reader" class="scanner"></div><button class="primary" style="width:100%;margin-top:12px" onclick="closeModal()">Cancel</button>`);setTimeout(()=>{window.scanner=new Html5Qrcode("reader");window.scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:230,height:230}},text=>{window.scanner.stop().catch(()=>{});closeModal();openPayment(text)},()=>{}).catch(()=>toast("Camera permission unavailable"))},250)}
+function showMyQR(){openModal(`<div class="qrwrap"><h2>My QR</h2><div id="qrcode"></div><b>${esc(d.upi)}</b><p style="font-size:12px;color:#999">Demo QR — not a real UPI QR</p></div>`);setTimeout(()=>new QRCode(document.getElementById("qrcode"),{text:d.upi,width:200,height:200}),100)}
+function showHome(){document.getElementById("homePage").classList.remove("hidden");document.getElementById("historyPage").classList.add("hidden");document.getElementById("homeNav").classList.add("active");document.getElementById("historyNav").classList.remove("active")}
+function showHistory(){document.getElementById("homePage").classList.add("hidden");document.getElementById("historyPage").classList.remove("hidden");document.getElementById("homeNav").classList.remove("active");document.getElementById("historyNav").classList.add("active");render()}
+function clearHistory(){if(confirm("Clear all history?")){d.history=[];save();toast("History cleared")}}
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 render();

@@ -1,28 +1,27 @@
-PAYFLOW EDUCATIONAL DEMO
-========================
+PAYFLOW V2 — EDUCATIONAL PAYMENT DEMO
 
-No login. No Firebase. No backend.
-All wallet/transaction data is stored locally in the browser using localStorage.
+No login. No Firebase. Data is stored in browser localStorage.
 
-FEATURES
-- Demo balance
-- Add demo money
-- Send demo money
-- Payment success screen
-- QR code
-- Transaction history
-- Dark mode
-- PWA / Add to Home Screen support
-- iOS Safari standalone support
+Included:
+- Payment screen
+- QR camera scanner
+- My QR
+- PIN screen (any non-empty value works; demo only)
+- Payment success animation + sound
+- Balance hidden by default; PIN required to reveal
+- Home page
+- Bottom navigation
+- History page
+- Demo add-money
+- PWA / iPhone Add to Home Screen
 
-IMPORTANT
-This is an educational demo. It does NOT perform real UPI/bank payments.
+IMPORTANT:
+This is not PhonePe and does not perform real UPI/bank transactions.
+Use only for educational/testing demonstrations.
 
-IPHONE INSTALL
-1. Host the folder on HTTPS hosting.
-2. Open the URL in Safari.
-3. Tap Share.
-4. Tap Add to Home Screen.
-5. Tap Add.
+iPhone:
+Host on HTTPS, open in Safari → Share → Add to Home Screen.
 
-For QR generation the first load uses qrcodejs from jsDelivr. Internet is required for that library unless you replace it with a local copy.
+Camera:
+QR scanning needs HTTPS (or localhost) and camera permission.
+The QR libraries are loaded from CDN, so first load needs internet.

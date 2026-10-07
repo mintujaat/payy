@@ -2,66 +2,68 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#5f259f">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="PayFlow">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon.svg">
-<link rel="stylesheet" href="style.css">
-<title>PayFlow — Demo Wallet</title>
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="style.css"><title>PayFlow</title>
 </head>
 <body>
-<header class="top">
-  <div><div class="brand">PayFlow</div><div class="sub">Educational Demo Wallet</div></div>
-  <button id="themeBtn" class="iconbtn">☾</button>
+<header class="topbar">
+  <div class="profile"><div class="avatar">M</div><div><b>Mintu</b><small>mintu@payflow</small></div></div>
+  <button class="round" onclick="openScanner()">▣</button>
 </header>
 
-<main>
-<section class="balance card">
-  <div class="muted">Available balance</div>
-  <div class="amount">₹<span id="balance">0</span></div>
-  <div class="upi" id="upiId">mintu@payflow</div>
-  <div class="actions">
-    <button onclick="openAdd()">＋ Add Money</button>
-    <button onclick="openSend()">↗ Send</button>
-    <button onclick="showQR()">▣ My QR</button>
-  </div>
+<main id="homePage">
+<section class="hero">
+  <div class="heroTop"><span>Wallet Balance</span><button onclick="showBalance()">👁</button></div>
+  <div id="balanceMasked" class="big">₹ •••••</div>
+  <div id="balanceVisible" class="big hidden">₹1,000</div>
+  <small>Demo wallet · PIN protected</small>
 </section>
 
-<section class="grid">
-  <button class="tile" onclick="openSend()">💸<b>Send Money</b><span>Pay another demo user</span></button>
-  <button class="tile" onclick="showQR()">▦<b>Receive</b><span>Show your QR code</span></button>
-  <button class="tile" onclick="openAdd()">＋<b>Add Money</b><span>Demo wallet top-up</span></button>
-  <button class="tile" onclick="resetDemo()">↻<b>Reset</b><span>Reset demo data</span></button>
+<section class="quick">
+<button onclick="openPayment()"><i>↗</i><b>Send</b><small>Money</small></button>
+<button onclick="openScanner()"><i>▦</i><b>Scan</b><small>QR</small></button>
+<button onclick="openAdd()"><i>＋</i><b>Add</b><small>Money</small></button>
+<button onclick="showMyQR()"><i>⌁</i><b>My QR</b><small>Receive</small></button>
 </section>
 
 <section class="card">
-  <div class="sectionhead"><h2>Recent transactions</h2><button class="link" onclick="clearTx()">Clear</button></div>
-  <div id="transactions"></div>
+<div class="rowtitle"><h3>Recharge & Payments</h3><span>See all</span></div>
+<div class="services">
+<button onclick="toast('Mobile Recharge is demo only')">📱<span>Mobile</span></button>
+<button onclick="toast('DTH is demo only')">📺<span>DTH</span></button>
+<button onclick="toast('Electricity is demo only')">💡<span>Electricity</span></button>
+<button onclick="toast('Bills are demo only')">🧾<span>Bills</span></button>
+</div>
 </section>
 
-<section class="install card">
-  <h2>Install on iPhone</h2>
-  <p>Open this website in Safari → tap <b>Share</b> → <b>Add to Home Screen</b> → Add.</p>
-  <p class="muted">No account or login is required. Demo data stays in this browser/device.</p>
+<section class="card">
+<div class="rowtitle"><h3>Recent Activity</h3><button onclick="showHistory()">View all</button></div>
+<div id="homeTx"></div>
 </section>
+
+<div class="notice">Educational demo — no real UPI or bank transaction.</div>
 </main>
 
-<nav class="bottom">
-<button class="active">⌂<span>Home</span></button>
-<button onclick="openSend()">↗<span>Pay</span></button>
-<button onclick="showQR()">▦<span>QR</span></button>
+<main id="historyPage" class="hidden page">
+<div class="pagehead"><h2>History</h2><button onclick="clearHistory()">Clear</button></div>
+<div class="card" id="historyList"></div>
+</main>
+
+<nav class="nav">
+<button id="homeNav" class="active" onclick="showHome()">⌂<span>Home</span></button>
+<button onclick="openPayment()">↗<span>Pay</span></button>
+<button onclick="openScanner()">▦<span>Scan</span></button>
+<button id="historyNav" onclick="showHistory()">◷<span>History</span></button>
 </nav>
 
-<div class="modal" id="modal">
-<div class="sheet">
-<button class="close" onclick="closeModal()">×</button>
-<div id="modalBody"></div>
-</div>
-</div>
+<div id="modal" class="modal"><div class="sheet"><button class="x" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
+<div id="toast" class="toast"></div>
+<script src="https://unpkg.com/html5-qrcode"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="app.js"></script>
-</body>
-</html>
+</body></html>
