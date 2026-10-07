@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5f259f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PayFlow">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="style.css">
+<title>PayFlow — Demo Wallet</title>
+</head>
+<body>
+<header class="top">
+  <div><div class="brand">PayFlow</div><div class="sub">Educational Demo Wallet</div></div>
+  <button id="themeBtn" class="iconbtn">☾</button>
+</header>
+
+<main>
+<section class="balance card">
+  <div class="muted">Available balance</div>
+  <div class="amount">₹<span id="balance">0</span></div>
+  <div class="upi" id="upiId">mintu@payflow</div>
+  <div class="actions">
+    <button onclick="openAdd()">＋ Add Money</button>
+    <button onclick="openSend()">↗ Send</button>
+    <button onclick="showQR()">▣ My QR</button>
+  </div>
+</section>
+
+<section class="grid">
+  <button class="tile" onclick="openSend()">💸<b>Send Money</b><span>Pay another demo user</span></button>
+  <button class="tile" onclick="showQR()">▦<b>Receive</b><span>Show your QR code</span></button>
+  <button class="tile" onclick="openAdd()">＋<b>Add Money</b><span>Demo wallet top-up</span></button>
+  <button class="tile" onclick="resetDemo()">↻<b>Reset</b><span>Reset demo data</span></button>
+</section>
+
+<section class="card">
+  <div class="sectionhead"><h2>Recent transactions</h2><button class="link" onclick="clearTx()">Clear</button></div>
+  <div id="transactions"></div>
+</section>
+
+<section class="install card">
+  <h2>Install on iPhone</h2>
+  <p>Open this website in Safari → tap <b>Share</b> → <b>Add to Home Screen</b> → Add.</p>
+  <p class="muted">No account or login is required. Demo data stays in this browser/device.</p>
+</section>
+</main>
+
+<nav class="bottom">
+<button class="active">⌂<span>Home</span></button>
+<button onclick="openSend()">↗<span>Pay</span></button>
+<button onclick="showQR()">▦<span>QR</span></button>
+</nav>
+
+<div class="modal" id="modal">
+<div class="sheet">
+<button class="close" onclick="closeModal()">×</button>
+<div id="modalBody"></div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
